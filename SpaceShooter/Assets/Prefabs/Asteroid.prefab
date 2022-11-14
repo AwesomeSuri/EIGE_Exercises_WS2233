@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 2302369140487628604}
   - component: {fileID: 4041804473164026870}
   - component: {fileID: 5037023049928135152}
+  - component: {fileID: 8447896358555335621}
   m_Layer: 0
   m_Name: Asteroid
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -98,3 +99,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 1
   maxSpeed: 5
+--- !u!135 &8447896358555335621
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2528669697271493155}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5454687
+  m_Center: {x: 0.029093415, y: -0.0006043613, z: 0.016702726}
