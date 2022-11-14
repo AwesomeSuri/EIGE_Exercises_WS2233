@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class ProjectileController : MonoBehaviour
+public class Projectile : MonoBehaviour
 {
-    public float speed = 10;
+    [SerializeField] private float speed = 10;
 
     private void Update()
     {
