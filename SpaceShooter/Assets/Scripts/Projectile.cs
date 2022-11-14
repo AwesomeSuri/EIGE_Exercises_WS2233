@@ -10,6 +10,11 @@ public class Projectile : MonoBehaviour
         transform.Translate(Vector3.up * (Time.deltaTime * speed));
     }
 
+    private void OnBecameInvisible()
+    {
+        Destroy(gameObject);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Enemy"))

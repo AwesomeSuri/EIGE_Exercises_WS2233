@@ -35,7 +35,7 @@ public class Enemy : MonoBehaviour
         Vector3 pos;
         pos.x = Random.Range(0f, 1f);
         pos.y = 1;
-        pos.z = 10;
+        pos.z = -Camera.main.transform.position.z;
         pos = Camera.main.ViewportToWorldPoint(pos);
         transform.position = pos;
     }
