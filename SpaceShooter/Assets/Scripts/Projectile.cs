@@ -17,7 +17,9 @@ public class Projectile : MonoBehaviour
             var enemy = other.GetComponent<Enemy>();
             if (enemy != null)
             {
-                Debug.Log("We hit: " + other.name);
+                enemy.SetSpeedAndPosition();
+                Player.score += 10;
+                Debug.Log("We hit: " + other.name + "; Current score: " + Player.score);
             }
         }
     }

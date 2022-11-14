@@ -3,8 +3,11 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public float playerSpeed = 0.2f;
-    public GameObject projectile;
+    public static int score = 0;
+    public static int lives = 3;
+    
+    [SerializeField] private float playerSpeed = 0.2f;
+    [SerializeField] private GameObject projectile;
 
     private Transform _transform;
 
@@ -28,6 +31,15 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Instantiate(projectile, _transform.position, projectile.transform.rotation);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Enemy"))
+        {
+            lives--;
+            Debug.Log("Current Life: " + lives);
         }
     }
 }

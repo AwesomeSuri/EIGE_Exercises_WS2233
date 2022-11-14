@@ -26,7 +26,7 @@ public class Enemy : MonoBehaviour
         SetSpeedAndPosition();
     }
 
-    void SetSpeedAndPosition()
+    public void SetSpeedAndPosition()
     {
         // speed
         _speed = Random.Range(minSpeed, maxSpeed);
