@@ -18,16 +18,27 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        var amtMove = Input.GetAxis("Horizontal") * playerSpeed * Time.deltaTime;
-        _transform.Translate(Vector3.right * amtMove);
+        // move
+        Vector3 move;
+        move.x = Input.GetAxis("Horizontal");
+        move.y = Input.GetAxis("Vertical");
+        move.z = 0;
+        move *= playerSpeed * Time.deltaTime;
+        _transform.Translate(move);
 
+        // adjust position
         var pos = _transform.position;
+        // wrap horizontally
         var x = pos.x;
         if (x > 10) x -= 20;
         if (x < -10) x += 20;
         pos.x = x;
+        // clamp vertically
+        pos.y = Mathf.Clamp(pos.y, -4, 1);
+        // apply changes
         _transform.position = pos;
-
+        
+        // shoot
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Instantiate(projectile, _transform.position, projectile.transform.rotation);
