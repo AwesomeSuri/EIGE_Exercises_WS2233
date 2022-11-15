@@ -1,0 +1,5 @@
+S12: SetSpeedAndPosition() <=> S18: SetPositionAndSpeed()
+S19: player "it" => "they"
+S23: "(see image)" ...what image? Previous slide?
+S23: "With the Projectile you will be able to shoot at the asteroids. We will now create these enemies – and add 
+some action to your game." Duplicate from S11 => deleted
