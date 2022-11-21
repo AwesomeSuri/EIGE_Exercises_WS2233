@@ -1,31 +1,47 @@
-using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    [SerializeField] private float speed = 10;
+    public GameObject explosionPrefab;
+    [SerializeField]
+    private float speed;
 
-    private void Update()
+    // Update is called once per frame
+    void Update()
     {
-        transform.Translate(Vector3.up * (Time.deltaTime * speed));
+        transform.position += Vector3.up * speed * Time.deltaTime;
     }
 
-    private void OnBecameInvisible()
+    void FixedUpdate()
     {
-        Destroy(gameObject);
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Enemy"))
+        // ReceiveGI screen = Camera.main.pixelRect;
+        // check if projectile is inside camera view, view space is always 0 -> 1
+        Vector3 posInViewSpace = Camera.main.WorldToViewportPoint(transform.position);
+        if(posInViewSpace.y > 1.2f)
         {
-            var enemy = other.GetComponent<Enemy>();
-            if (enemy != null)
-            {
-                enemy.SetSpeedAndPosition();
-                Player.score += 10;
-                Debug.Log("We hit: " + other.name + "; Current score: " + Player.score);
-            }
+            Destroy(gameObject);
+        }
+    }
+
+    
+    void OnTriggerEnter(Collider other)
+    {
+        Enemy collideWith = other.GetComponent<Enemy>();
+        if(collideWith != null)
+        {
+            // Debug.Log("We hit: " + other.name);
+            // const bool initiateInWorldSapce = true;
+            Instantiate(explosionPrefab, other.transform.position, other.transform.rotation);
+            
+            collideWith.SetSpeedAndPosition();
+
+            Player.score += 10;
+
+            Debug.Log("Your Points: " + Player.score);
+
+            Destroy(gameObject);
         }
     }
 }

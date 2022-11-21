@@ -1,42 +1,38 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] private float minSpeed = 1;
-    [SerializeField] private float maxSpeed = 5;
+    [SerializeField]
+    Vector2 minMaxSpeed;
+    [SerializeField]
+    Vector3 rotationSpeed;
 
-    private float _speed;
-
-    private void Start()
+    // Start is called before the first frame update
+    void Start()
     {
         SetSpeedAndPosition();
     }
 
-    private void Update()
+    // Update is called once per frame
+    void Update()
     {
-        transform.Translate(Vector3.down * (Time.deltaTime * _speed));
+        float amtToMove = Time.deltaTime * speed;
+        transform.Translate(Vector3.down * amtToMove, Space.World);
+        transform.Rotate(Time.deltaTime * rotationSpeed, Space.Self);
+
+        if (Camera.main.WorldToViewportPoint(transform.position).y < -0.1f)
+        {
+            SetSpeedAndPosition();
+        }
     }
 
-    private void OnBecameInvisible()
-    {
-        SetSpeedAndPosition();
-    }
+    private float speed;
 
     public void SetSpeedAndPosition()
     {
-        // speed
-        _speed = Random.Range(minSpeed, maxSpeed);
+        speed = Random.Range(minMaxSpeed.x, minMaxSpeed.y);
 
-        // position
-        Vector3 pos;
-        pos.x = Random.Range(0f, 1f);
-        pos.y = 1;
-        pos.z = -Camera.main.transform.position.z;
-        pos = Camera.main.ViewportToWorldPoint(pos);
-        transform.position = pos;
+        Vector3 newPosition = Camera.main.ViewportToWorldPoint(new Vector3(Random.Range(0.05f, 0.95f), 1, 0));
+        transform.position = new Vector3(newPosition.x, newPosition.y, transform.position.z);
     }
 }

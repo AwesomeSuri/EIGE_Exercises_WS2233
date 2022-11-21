@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2908326030695016601}
   - component: {fileID: 2302369140487628604}
   - component: {fileID: 4041804473164026870}
-  - component: {fileID: 5037023049928135152}
+  - component: {fileID: 3472148049502878791}
   - component: {fileID: 8447896358555335621}
   m_Layer: 0
   m_Name: Asteroid
@@ -85,7 +85,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &5037023049928135152
+--- !u!114 &3472148049502878791
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -94,11 +94,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2528669697271493155}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c4b7d834fa65cf44b626e720d3c5b00, type: 3}
+  m_Script: {fileID: 11500000, guid: 92fb4371028fdee4e9cb1b609b9a9646, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minSpeed: 1
-  maxSpeed: 5
+  minMaxSpeed: {x: 1, y: 3}
+  rotationSpeed: {x: 45, y: 45, z: 45}
 --- !u!135 &8447896358555335621
 SphereCollider:
   m_ObjectHideFlags: 0

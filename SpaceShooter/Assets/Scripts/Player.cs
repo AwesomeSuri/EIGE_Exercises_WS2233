@@ -1,56 +1,54 @@
-using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
     public static int score = 0;
     public static int lives = 3;
-    
-    [SerializeField] private float playerSpeed = 0.2f;
-    [SerializeField] private GameObject projectile;
 
-    private Transform _transform;
+    private Quaternion initalRotation;
+    [SerializeField]
+    private float speed = 14.0f;
+    [SerializeField]
+    private Vector2 tilt;
+    [SerializeField]
+    private GameObject projectile;
+    [SerializeField]
+    private Transform weaponLocation;
 
-    private void Awake()
+    // Start is called before the first frame update
+    void Start()
     {
-        _transform = transform;
+        initalRotation = transform.rotation;
     }
 
-    private void Update()
+    // Update is called once per frame
+    void Update()
     {
-        // move
-        Vector3 move;
-        move.x = Input.GetAxis("Horizontal");
-        move.y = Input.GetAxis("Vertical");
-        move.z = 0;
-        move *= playerSpeed * Time.deltaTime;
-        _transform.Translate(move);
+        float amtToMoveX = Time.deltaTime * speed * Input.GetAxis("Horizontal");
+        float amtToMoveY = Time.deltaTime * speed * Input.GetAxis("Vertical");
+        transform.position += Vector3.right * amtToMoveX + Vector3.up * amtToMoveY;
+        // check if projectile is inside camera view, view space is always 0 -> 1
+        Vector3 posInViewSpace = Camera.main.WorldToViewportPoint(transform.position);
+        if (posInViewSpace.x < 0.0f)
+        {
+            transform.position = Camera.main.ViewportToWorldPoint(new Vector3(1, posInViewSpace.y, posInViewSpace.z));
+        }
 
-        // adjust position
-        var pos = _transform.position;
-        // wrap horizontally
-        var x = pos.x;
-        if (x > 10) x -= 20;
-        if (x < -10) x += 20;
-        pos.x = x;
-        // clamp vertically
-        pos.y = Mathf.Clamp(pos.y, -4, 1);
-        // apply changes
-        _transform.position = pos;
-        
-        // shoot
+        if (posInViewSpace.x > 1.0f)
+        {
+            transform.position = Camera.main.ViewportToWorldPoint(new Vector3(0, posInViewSpace.y, posInViewSpace.z));
+        }
+
+        transform.rotation = Quaternion.Slerp(initalRotation,
+            Quaternion.Euler(tilt.y * Input.GetAxis("Vertical"), -tilt.x * Input.GetAxis("Horizontal"), 0), 1);
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Instantiate(projectile, _transform.position, projectile.transform.rotation);
+            Instantiate(projectile, weaponLocation.position, transform.rotation);
         }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Enemy"))
-        {
-            lives--;
-            Debug.Log("Current Life: " + lives);
-        }
-    }
+
 }
