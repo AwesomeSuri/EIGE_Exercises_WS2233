@@ -14,9 +14,9 @@ public class Enemy : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        float amtToMove = Time.deltaTime * speed;
+        float amtToMove = Time.fixedDeltaTime * speed;
         transform.Translate(Vector3.down * amtToMove, Space.World);
         transform.Rotate(Time.deltaTime * rotationSpeed, Space.Self);
 

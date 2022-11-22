@@ -39,7 +39,7 @@ public class Projectile : MonoBehaviour
 
             Player.score += 10;
 
-            Debug.Log("Your Points: " + Player.score);
+            // Debug.Log("Your Points: " + Player.score);
 
             Destroy(gameObject);
         }

@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 808338449267035381}
   - component: {fileID: 3165576000293280718}
   - component: {fileID: 1934357407536222503}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: SimpleShip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -133,7 +133,9 @@ MonoBehaviour:
   speed: 14
   tilt: {x: 0, y: 0}
   projectile: {fileID: 7716606098319845727, guid: 1426aae4f84aace4f9ec2e2b172d99a8, type: 3}
+  explosionPrefab: {fileID: 8959740490648135637, guid: 674e2d21ecaa75f4cba92346e2e7bffa, type: 3}
   weaponLocation: {fileID: 2354666482109934068}
+  scoreUI: {fileID: 0}
 --- !u!64 &3165576000293280718
 MeshCollider:
   m_ObjectHideFlags: 0

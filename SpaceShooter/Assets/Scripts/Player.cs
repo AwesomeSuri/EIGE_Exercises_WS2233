@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -15,12 +18,19 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject projectile;
     [SerializeField]
+    private GameObject explosionPrefab;
+    [SerializeField]
     private Transform weaponLocation;
+    [SerializeField]
+    private TMP_Text scoreUI;
 
     // Start is called before the first frame update
     void Start()
     {
         initalRotation = transform.rotation;
+
+        lives = 3;
+        score = 0;
     }
 
     // Update is called once per frame
@@ -48,7 +58,27 @@ public class Player : MonoBehaviour
         {
             Instantiate(projectile, weaponLocation.position, transform.rotation);
         }
+        
+        scoreUI.text = "Score: " + score + "<br>Lives: " + lives;
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        Enemy collideWith = other.GetComponent<Enemy>();
+        if(collideWith != null)
+        {
+            // Debug.Log("We hit: " + other.name);
+            // const bool initiateInWorldSapce = true;
+            Instantiate(explosionPrefab, transform.position, other.transform.rotation);
+            
+            collideWith.SetSpeedAndPosition();
 
+            lives--;
+
+            if (lives <= 0)
+            {
+                SceneManager.LoadScene("Lose");
+            }
+        }
+    }
 }
