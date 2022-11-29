@@ -7,6 +7,16 @@ using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
+    public enum State
+    {
+        Playing,
+        Explosion,
+        Invincible
+    }
+    
+    private State playerState;
+
+
     public static int score = 0;
     public static int lives = 3;
 
@@ -23,6 +33,8 @@ public class Player : MonoBehaviour
     private Transform weaponLocation;
     [SerializeField]
     private TMP_Text scoreUI;
+    [SerializeField]
+    private float respawnTime;
 
     // Start is called before the first frame update
     void Start()
@@ -36,49 +48,100 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float amtToMoveX = Time.deltaTime * speed * Input.GetAxis("Horizontal");
-        float amtToMoveY = Time.deltaTime * speed * Input.GetAxis("Vertical");
-        transform.position += Vector3.right * amtToMoveX + Vector3.up * amtToMoveY;
-        // check if projectile is inside camera view, view space is always 0 -> 1
-        Vector3 posInViewSpace = Camera.main.WorldToViewportPoint(transform.position);
-        if (posInViewSpace.x < 0.0f)
+        if (playerState != State.Explosion)
         {
-            transform.position = Camera.main.ViewportToWorldPoint(new Vector3(1, posInViewSpace.y, posInViewSpace.z));
-        }
 
-        if (posInViewSpace.x > 1.0f)
-        {
-            transform.position = Camera.main.ViewportToWorldPoint(new Vector3(0, posInViewSpace.y, posInViewSpace.z));
-        }
+            float amtToMoveX = Time.deltaTime * speed * Input.GetAxis("Horizontal");
+            float amtToMoveY = Time.deltaTime * speed * Input.GetAxis("Vertical");
+            transform.position += Vector3.right * amtToMoveX + Vector3.up * amtToMoveY;
+            // check if projectile is inside camera view, view space is always 0 -> 1
+            Vector3 posInViewSpace = Camera.main.WorldToViewportPoint(transform.position);
+            if (posInViewSpace.x < 0.0f)
+            {
+                transform.position =
+                    Camera.main.ViewportToWorldPoint(new Vector3(1, posInViewSpace.y, posInViewSpace.z));
+            }
 
-        transform.rotation = Quaternion.Slerp(initalRotation,
-            Quaternion.Euler(tilt.y * Input.GetAxis("Vertical"), -tilt.x * Input.GetAxis("Horizontal"), 0), 1);
+            if (posInViewSpace.x > 1.0f)
+            {
+                transform.position =
+                    Camera.main.ViewportToWorldPoint(new Vector3(0, posInViewSpace.y, posInViewSpace.z));
+            }
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Instantiate(projectile, weaponLocation.position, transform.rotation);
+            transform.rotation = Quaternion.Slerp(initalRotation,
+                Quaternion.Euler(tilt.y * Input.GetAxis("Vertical"), -tilt.x * Input.GetAxis("Horizontal"), 0), 1);
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                Instantiate(projectile, weaponLocation.position, transform.rotation);
+            }
+
+            scoreUI.text = "Score: " + score + "<br>Lives: " + lives;
         }
-        
-        scoreUI.text = "Score: " + score + "<br>Lives: " + lives;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         Enemy collideWith = other.GetComponent<Enemy>();
-        if(collideWith != null)
+        if (collideWith != null && playerState == State.Playing)
         {
-            // Debug.Log("We hit: " + other.name);
-            // const bool initiateInWorldSapce = true;
+            // asteroid explosion
             Instantiate(explosionPrefab, transform.position, other.transform.rotation);
-            
+            // reset asteroid
             collideWith.SetSpeedAndPosition();
 
-            lives--;
+            // destroy ship
+            StartCoroutine(DestroyShip());
+        }
+    }
 
-            if (lives <= 0)
+    private IEnumerator DestroyShip()
+    {
+        // ship explosion
+        Instantiate(explosionPrefab, transform.position, transform.rotation);
+        GetComponent<Renderer>().enabled = false;
+        playerState = State.Explosion;
+
+        // lose life and wait for respawn
+        lives--;
+        yield return new WaitForSeconds(respawnTime);
+
+        // check lives
+        if (lives <= 0)
+        {
+            // game over
+            SceneManager.LoadScene("Lose");
+        }
+        else
+        {
+            // respawn
+            // reset position
+            transform.position = Vector3.down * 10;
+            StartCoroutine(Blinking());
+            
+            // move up
+            while (transform.position.y < 0)
             {
-                SceneManager.LoadScene("Lose");
+                float amtToMoveY = Time.deltaTime * speed;
+                transform.position += Vector3.up * amtToMoveY;
+                yield return null;
             }
+
+            // invisibility
+            playerState = State.Invincible;
+            yield return new WaitForSeconds(respawnTime);
+            playerState = State.Playing;
+        }
+    }
+
+    private IEnumerator Blinking()
+    {
+        while (playerState != State.Playing)
+        {
+            GetComponent<Renderer>().enabled = false;
+            yield return new WaitForSeconds(.2f);
+            GetComponent<Renderer>().enabled = true;
+            yield return new WaitForSeconds(.2f);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -34,6 +35,9 @@ public class Projectile : MonoBehaviour
             // Debug.Log("We hit: " + other.name);
             // const bool initiateInWorldSapce = true;
             Instantiate(explosionPrefab, other.transform.position, other.transform.rotation);
+
+            collideWith.minMaxSpeed.x += .5f;
+            collideWith.minMaxSpeed.y += .5f;
             
             collideWith.SetSpeedAndPosition();
 
