@@ -1,18 +1,14 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    public GameObject explosionPrefab;
-    [SerializeField]
-    private float speed;
+    public GameObject explosionPrefab; // <- needs to be set in the inspector!
+    public float speed;                // <- is 0
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        transform.position += Vector3.up * speed * Time.deltaTime;
+        transform.position += transform.up * speed * Time.deltaTime;
     }
 
     void FixedUpdate()
