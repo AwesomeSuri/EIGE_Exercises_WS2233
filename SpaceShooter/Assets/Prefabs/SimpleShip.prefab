@@ -136,6 +136,7 @@ MonoBehaviour:
   explosionPrefab: {fileID: 8959740490648135637, guid: 674e2d21ecaa75f4cba92346e2e7bffa, type: 3}
   weaponLocation: {fileID: 2354666482109934068}
   scoreUI: {fileID: 0}
+  respawnTime: 1
 --- !u!64 &3165576000293280718
 MeshCollider:
   m_ObjectHideFlags: 0
