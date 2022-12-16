@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6650941170403167774}
   - component: {fileID: 6650941170403167761}
   - component: {fileID: 3485786230850509502}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: VanishingPlatform
   m_TagString: Untagged
   m_Icon: {fileID: 0}

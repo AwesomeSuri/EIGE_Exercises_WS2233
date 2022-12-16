@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -5,13 +6,13 @@ public class VanishingPlatform : MonoBehaviour
 {
     [SerializeField] private float duration = 3;
 
-    private Collider col;
+    private BoxCollider col;
     private Renderer rend;
     private bool isVisible;
 
     private void Start()
     {
-        col = GetComponent<Collider>();
+        col = GetComponent<BoxCollider>();
         rend = GetComponent<Renderer>();
         isVisible = true;
         
@@ -26,5 +27,15 @@ public class VanishingPlatform : MonoBehaviour
             isVisible = !isVisible;
             col.enabled = rend.enabled = isVisible;
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (col == null) col = GetComponent<BoxCollider>();
+        
+        Gizmos.color = Color.red;
+        var rotationMatrix = Matrix4x4.TRS(transform.position, transform.rotation, transform.lossyScale);
+        Gizmos.matrix = rotationMatrix;
+        Gizmos.DrawWireCube(col.center, col.size);
     }
 }

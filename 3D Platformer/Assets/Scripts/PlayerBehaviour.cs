@@ -1,10 +1,11 @@
 using System;
+using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerBehaviour : MonoBehaviour
 {
-    [System.Serializable]
+    [Serializable]
     public class InputSettings
     {
         public string FORWARD_AXIS = "Vertical";
@@ -12,8 +13,8 @@ public class PlayerBehaviour : MonoBehaviour
         public string TURN_AXIS = "Mouse X";
         public string JUMP_AXIS = "Jump";
     }
-    
-    [System.Serializable]
+
+    [Serializable]
     public class MoveSettings
     {
         public float runVelocity = 12;
@@ -64,10 +65,8 @@ public class PlayerBehaviour : MonoBehaviour
         if (Mathf.Abs(turnInput) > 0)
         {
             var amtToRotate = moveSettings.rotateVelocity * turnInput * Time.deltaTime;
-            targetRotation *= Quaternion.AngleAxis(amtToRotate, Vector3.up);
+            transform.rotation *= Quaternion.AngleAxis(amtToRotate, Vector3.up);
         }
-
-        transform.rotation = targetRotation;
     }
 
     private void Run()
@@ -75,7 +74,7 @@ public class PlayerBehaviour : MonoBehaviour
         velocity.x = sidewaysInput * moveSettings.runVelocity;
         velocity.y = playerRigidbody.velocity.y;
         velocity.z = forwardInput * moveSettings.runVelocity;
-        
+
         playerRigidbody.velocity = transform.TransformDirection(velocity);
     }
 
@@ -93,15 +92,40 @@ public class PlayerBehaviour : MonoBehaviour
 
     private bool Grounded()
     {
-        return Physics.Raycast(transform.position, Vector3.down, 
+        return Physics.Raycast(transform.position, Vector3.down,
             moveSettings.distanceToGround, moveSettings.ground);
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (moveSettings.ground == (moveSettings.ground | (1 << other.gameObject.layer)))
+        {
+            var below = other.contacts
+                .Select(contact => (contact.point - transform.position).normalized)
+                .Select(dir => Vector3.Dot(dir, Vector3.down))
+                .Any(dot => dot > .7f);
+
+            if(below)
+            {
+                transform.SetParent(other.gameObject.transform, true);
+            }
+        }
+    }
+
+    private void OnCollisionExit(Collision other)
+    {
+        if (other.transform == transform.parent)
+        {
+            transform.SetParent(null, true);
+        }
     }
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Physics.Raycast(transform.position, Vector3.down,
-            moveSettings.distanceToGround, moveSettings.ground) ?
-            Color.green : Color.red;
+            moveSettings.distanceToGround, moveSettings.ground)
+            ? Color.green
+            : Color.red;
         Gizmos.DrawLine(transform.position, transform.position + Vector3.down * moveSettings.distanceToGround);
     }
 }
