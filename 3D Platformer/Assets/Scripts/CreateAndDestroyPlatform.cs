@@ -18,7 +18,7 @@ public class CreateAndDestroyPlatform : MonoBehaviour
 
     private void Update()
     {
-        if (Physics.Raycast(transform.position, transform.TransformDirection(offset), out var hit, destroyable))
+        if (Physics.Raycast(transform.position, transform.TransformDirection(offset), out var hit, offset.magnitude, destroyable))
         {
             if (toDestroy != null)
             {
