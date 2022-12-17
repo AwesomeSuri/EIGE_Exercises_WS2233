@@ -370,7 +370,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 260437564}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.5, y: 0, z: 60}
+  m_LocalPosition: {x: -2.5, y: 0, z: 15}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -514,6 +514,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: RotatingPlatform Line
       objectReference: {fileID: 0}
+    - target: {fileID: 933844608520559285, guid: a0901548ced2de848aaa7cca1b0bbf81, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 933844608520559290, guid: a0901548ced2de848aaa7cca1b0bbf81, type: 3}
       propertyPath: m_RootOrder
       value: 8
@@ -560,6 +564,51 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a0901548ced2de848aaa7cca1b0bbf81, type: 3}
+--- !u!1 &688653480
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 688653482}
+  - component: {fileID: 688653481}
+  m_Layer: 0
+  m_Name: DeathZone
+  m_TagString: DeathZone
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!65 &688653481
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 688653480}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!4 &688653482
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 688653480}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -10, z: 10}
+  m_LocalScale: {x: 30, y: 5, z: 50}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 13
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -976,6 +1025,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3801361876433330560, guid: dd06ba21b196cb644b7ea44c016abc5f, type: 3}
   m_PrefabInstance: {fileID: 1329426469}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1335174987
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1335174988}
+  m_Layer: 0
+  m_Name: ===TRIGGERS===
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1335174988
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1335174987}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1908069727 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5172558198983286008, guid: e72e28f13ee553a419c0cffe06ea9161, type: 3}
@@ -1036,6 +1116,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: RotatingPlatform Around
       objectReference: {fileID: 0}
+    - target: {fileID: 6420344697774621981, guid: 818cda42bc885f247b43ce162856c2c6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 818cda42bc885f247b43ce162856c2c6, type: 3}
 --- !u!1001 &4825960420475551702
@@ -1048,6 +1132,10 @@ PrefabInstance:
     - target: {fileID: 6650941170403167763, guid: 4ae50cb8a61677642a9092721f4f8f7b, type: 3}
       propertyPath: m_Name
       value: VanishingPlatform
+      objectReference: {fileID: 0}
+    - target: {fileID: 6650941170403167763, guid: 4ae50cb8a61677642a9092721f4f8f7b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6650941170403167772, guid: 4ae50cb8a61677642a9092721f4f8f7b, type: 3}
       propertyPath: m_RootOrder
@@ -1218,6 +1306,10 @@ PrefabInstance:
     - target: {fileID: 2478363027369813853, guid: faf21a772927e354c8ce4935b787733b, type: 3}
       propertyPath: m_Name
       value: FallingPlatform
+      objectReference: {fileID: 0}
+    - target: {fileID: 2478363027369813853, guid: faf21a772927e354c8ce4935b787733b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: faf21a772927e354c8ce4935b787733b, type: 3}
