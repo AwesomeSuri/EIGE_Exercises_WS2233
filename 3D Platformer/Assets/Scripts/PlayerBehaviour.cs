@@ -26,11 +26,17 @@ public class PlayerBehaviour : MonoBehaviour
 
     [SerializeField] private InputSettings inputSettings;
     [SerializeField] private MoveSettings moveSettings;
+    [SerializeField] private Transform spawnPoint;
 
     private Rigidbody playerRigidbody;
     private Vector3 velocity;
     private Quaternion targetRotation;
     private float forwardInput, sidewaysInput, turnInput, jumpInput;
+
+    private void Start()
+    {
+        Spawn();
+    }
 
     private void Awake()
     {
@@ -96,6 +102,11 @@ public class PlayerBehaviour : MonoBehaviour
             moveSettings.distanceToGround, moveSettings.ground);
     }
 
+    private void Spawn()
+    {
+        transform.position = spawnPoint.position;
+    }
+
     private void OnCollisionEnter(Collision other)
     {
         if (moveSettings.ground == (moveSettings.ground | (1 << other.gameObject.layer)))
@@ -105,7 +116,7 @@ public class PlayerBehaviour : MonoBehaviour
                 .Select(dir => Vector3.Dot(dir, Vector3.down))
                 .Any(dot => dot > .7f);
 
-            if(below)
+            if (below)
             {
                 transform.SetParent(other.gameObject.transform, true);
             }
