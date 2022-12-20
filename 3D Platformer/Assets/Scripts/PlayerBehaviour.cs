@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 
@@ -24,9 +25,12 @@ public class PlayerBehaviour : MonoBehaviour
         public LayerMask ground;
     }
 
-    [SerializeField] private InputSettings inputSettings;
-    [SerializeField] private MoveSettings moveSettings;
-    [SerializeField] private Transform spawnPoint;
+    [SerializeField]
+    private InputSettings inputSettings;
+    [SerializeField]
+    private MoveSettings moveSettings;
+    [SerializeField]
+    private Transform spawnPoint;
 
     private Rigidbody playerRigidbody;
     private Vector3 velocity;
@@ -56,6 +60,7 @@ public class PlayerBehaviour : MonoBehaviour
     {
         Run();
         Jump();
+        playerRigidbody.MoveRotation(Quaternion.Euler(0, playerRigidbody.rotation.eulerAngles.y, 0));
     }
 
     private void GetInput()
@@ -118,16 +123,21 @@ public class PlayerBehaviour : MonoBehaviour
 
             if (below)
             {
-                transform.SetParent(other.gameObject.transform, true);
+                var parentScale = new GameObject("Parent Scale").transform;
+                parentScale.SetParent(other.gameObject.transform, true);
+                transform.SetParent(parentScale, true);
             }
         }
     }
 
     private void OnCollisionExit(Collision other)
     {
-        if (other.transform == transform.parent)
+        if (transform.parent != null && other.transform == transform.parent.parent)
         {
+            var parentScale = transform.parent;
             transform.SetParent(null, true);
+            transform.localScale = Vector3.one;
+            Destroy(parentScale.gameObject);
         }
     }
 
