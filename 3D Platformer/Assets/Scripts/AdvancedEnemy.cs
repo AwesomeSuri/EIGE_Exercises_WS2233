@@ -22,8 +22,13 @@ public class AdvancedEnemy : MonoBehaviour
     private Rigidbody prey;
     [SerializeField]
     private Behaviour behaviour;
+    [SerializeField]
+    private Transform[] wayPoints;
+    [SerializeField]
+    private float distanceThreshold;
 
     private Rigidbody enemyRigidbody;
+    private int currentWayPoint;
 
     private void Awake()
     {
@@ -41,6 +46,7 @@ public class AdvancedEnemy : MonoBehaviour
                 Intercept(prey.position, prey.velocity);
                 break;
             case Behaviour.PatternMovement:
+                PatternMovement();
                 break;
             case Behaviour.ChasePatternMovement:
                 break;
@@ -70,5 +76,15 @@ public class AdvancedEnemy : MonoBehaviour
         Debug.DrawLine(targetPosition, predictedInterceptionPoint, Color.blue);
         
         ChaseLineOfSight(predictedInterceptionPoint, chaseSpeed);
+    }
+
+    private void PatternMovement()
+    {
+        var targetPos = wayPoints[currentWayPoint].position;
+        ChaseLineOfSight(targetPos, normalSpeed);
+        if (Vector3.Distance(transform.position, targetPos) < distanceThreshold)
+        {
+            currentWayPoint = (currentWayPoint + 1) % wayPoints.Length;
+        }
     }
 }
