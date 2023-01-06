@@ -18,9 +18,12 @@ public class AdvancedEnemy : MonoBehaviour
     private float chaseSpeed;
     [SerializeField]
     private float normalSpeed;
+    [SerializeField]
+    private Transform prey;
+    [SerializeField]
+    private Behaviour behaviour;
 
     private Rigidbody enemyRigidbody;
-    private Behaviour behaviour;
 
     private void Awake()
     {
@@ -32,6 +35,7 @@ public class AdvancedEnemy : MonoBehaviour
         switch (behaviour)
         {
             case Behaviour.LineOfSight:
+                ChaseLineOfSight(prey.position, chaseSpeed);
                 break;
             case Behaviour.Intercept:
                 break;
@@ -44,5 +48,14 @@ public class AdvancedEnemy : MonoBehaviour
             default:
                 throw new ArgumentOutOfRangeException();
         }
+    }
+
+    private void ChaseLineOfSight(Vector3 targetPosition, float speed)
+    {
+        var direction = (targetPosition - transform.position).normalized * speed;
+        enemyRigidbody.velocity = new Vector3(
+            direction.x,
+            enemyRigidbody.velocity.y,
+            direction.z);
     }
 }
