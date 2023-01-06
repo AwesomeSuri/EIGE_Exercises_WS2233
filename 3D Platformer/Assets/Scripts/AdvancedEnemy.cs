@@ -54,6 +54,7 @@ public class AdvancedEnemy : MonoBehaviour
                 ChasePatternMovement(prey.position);
                 break;
             case Behaviour.Hide:
+                Hide(prey.position);
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -101,5 +102,24 @@ public class AdvancedEnemy : MonoBehaviour
         {
             PatternMovement();
         }
+    }
+
+    private void Hide(Vector3 targetPosition)
+    {
+        if (PlayerVisible(targetPosition))
+        {
+            ChaseLineOfSight(targetPosition, chaseSpeed);
+        }
+        else
+        {
+            PatternMovement();
+        }
+    }
+
+    private bool PlayerVisible(Vector3 targetPosition)
+    {
+        var directionToTarget = (targetPosition - transform.position).normalized;
+        Physics.Raycast(transform.position, directionToTarget, out var hit);
+        return hit.collider.gameObject.CompareTag("Player");
     }
 }
