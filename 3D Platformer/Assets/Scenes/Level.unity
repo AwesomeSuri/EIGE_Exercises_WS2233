@@ -3378,8 +3378,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   chaseSpeed: 3
   normalSpeed: 1
-  prey: {fileID: 33243525}
-  behaviour: 0
+  prey: {fileID: 33243521}
+  behaviour: 1
 --- !u!54 &832540806
 Rigidbody:
   m_ObjectHideFlags: 0

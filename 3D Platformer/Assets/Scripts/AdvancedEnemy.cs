@@ -19,7 +19,7 @@ public class AdvancedEnemy : MonoBehaviour
     [SerializeField]
     private float normalSpeed;
     [SerializeField]
-    private Transform prey;
+    private Rigidbody prey;
     [SerializeField]
     private Behaviour behaviour;
 
@@ -38,6 +38,7 @@ public class AdvancedEnemy : MonoBehaviour
                 ChaseLineOfSight(prey.position, chaseSpeed);
                 break;
             case Behaviour.Intercept:
+                Intercept(prey.position, prey.velocity);
                 break;
             case Behaviour.PatternMovement:
                 break;
@@ -53,9 +54,21 @@ public class AdvancedEnemy : MonoBehaviour
     private void ChaseLineOfSight(Vector3 targetPosition, float speed)
     {
         var direction = (targetPosition - transform.position).normalized * speed;
+        Debug.DrawLine(transform.position, transform.position + direction, Color.red);
         enemyRigidbody.velocity = new Vector3(
             direction.x,
             enemyRigidbody.velocity.y,
             direction.z);
+    }
+
+    private void Intercept(Vector3 targetPosition, Vector3 targetVelocity)
+    {
+        var velocityRelative = targetVelocity - enemyRigidbody.velocity;
+        var distance = Vector3.Distance(targetPosition, transform.position);
+        var timeToClose = distance / velocityRelative.magnitude;
+        var predictedInterceptionPoint = targetPosition + timeToClose * targetVelocity;
+        Debug.DrawLine(targetPosition, predictedInterceptionPoint, Color.blue);
+        
+        ChaseLineOfSight(predictedInterceptionPoint, chaseSpeed);
     }
 }
