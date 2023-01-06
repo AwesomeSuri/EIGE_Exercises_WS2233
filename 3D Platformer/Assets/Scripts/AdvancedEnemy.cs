@@ -15,9 +15,9 @@ public class AdvancedEnemy : MonoBehaviour
     }
     
     [SerializeField]
-    private float chaseSpeed;
+    private float chaseSpeed = 6;
     [SerializeField]
-    private float normalSpeed;
+    private float normalSpeed = 3;
     [SerializeField]
     private Rigidbody prey;
     [SerializeField]
@@ -25,7 +25,9 @@ public class AdvancedEnemy : MonoBehaviour
     [SerializeField]
     private Transform[] wayPoints;
     [SerializeField]
-    private float distanceThreshold;
+    private float distanceThreshold = 2;
+    [SerializeField]
+    private float chaseEvadeDistance = 10;
 
     private Rigidbody enemyRigidbody;
     private int currentWayPoint;
@@ -49,6 +51,7 @@ public class AdvancedEnemy : MonoBehaviour
                 PatternMovement();
                 break;
             case Behaviour.ChasePatternMovement:
+                ChasePatternMovement(prey.position);
                 break;
             case Behaviour.Hide:
                 break;
@@ -85,6 +88,18 @@ public class AdvancedEnemy : MonoBehaviour
         if (Vector3.Distance(transform.position, targetPos) < distanceThreshold)
         {
             currentWayPoint = (currentWayPoint + 1) % wayPoints.Length;
+        }
+    }
+
+    private void ChasePatternMovement(Vector3 targetPosition)
+    {
+        if (Vector3.Distance(targetPosition, transform.position) < chaseEvadeDistance)
+        {
+            ChaseLineOfSight(targetPosition, chaseSpeed);
+        }
+        else
+        {
+            PatternMovement();
         }
     }
 }
