@@ -36,6 +36,7 @@ public class PlayerBehaviour : MonoBehaviour
     private Vector3 velocity;
     private Quaternion targetRotation;
     private float forwardInput, sidewaysInput, turnInput, jumpInput;
+    private Transform parentScale;
 
     private void Start()
     {
@@ -45,6 +46,7 @@ public class PlayerBehaviour : MonoBehaviour
     private void Awake()
     {
         playerRigidbody = GetComponent<Rigidbody>();
+        Debug.Log(playerRigidbody);
         velocity = Vector3.zero;
         targetRotation = transform.rotation;
         forwardInput = sidewaysInput = turnInput = jumpInput = 0;
@@ -123,7 +125,12 @@ public class PlayerBehaviour : MonoBehaviour
 
             if (below)
             {
-                var parentScale = new GameObject("Parent Scale").transform;
+                if (parentScale != null)
+                {
+                    transform.SetParent(null, true);
+                    Destroy(parentScale.gameObject);
+                }
+                parentScale = new GameObject("Parent Scale").transform;
                 parentScale.SetParent(other.gameObject.transform, true);
                 transform.SetParent(parentScale, true);
             }
@@ -132,12 +139,19 @@ public class PlayerBehaviour : MonoBehaviour
 
     private void OnCollisionExit(Collision other)
     {
-        if (transform.parent != null && other.transform == transform.parent.parent)
+        if (parentScale != null && other.transform == parentScale.parent)
         {
-            var parentScale = transform.parent;
             transform.SetParent(null, true);
             transform.localScale = Vector3.one;
             Destroy(parentScale.gameObject);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("DeathZone"))
+        {
+            Spawn();
         }
     }
 

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
@@ -6,6 +7,12 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] private float distanceAway;
     [SerializeField] private float distanceUp;
     [SerializeField] private float smooth;
+
+    private void Start()
+    {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
 
     private void LateUpdate()
     {
