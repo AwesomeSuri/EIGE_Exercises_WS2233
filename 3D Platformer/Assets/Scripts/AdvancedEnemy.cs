@@ -1,16 +1,14 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AdvancedEnemy : MonoBehaviour
 {
     public enum Behaviour
     {
-        LineOfSight,
+        Chase,
         Intercept,
-        PatternMovement,
-        ChasePatternMovement,
+        Patrol,
+        ChasePatrol,
         Hide
     }
     
@@ -41,17 +39,17 @@ public class AdvancedEnemy : MonoBehaviour
     {
         switch (behaviour)
         {
-            case Behaviour.LineOfSight:
-                ChaseLineOfSight(prey.position, chaseSpeed);
+            case Behaviour.Chase:
+                Chase(prey.position, chaseSpeed);
                 break;
             case Behaviour.Intercept:
                 Intercept(prey.position, prey.velocity);
                 break;
-            case Behaviour.PatternMovement:
-                PatternMovement();
+            case Behaviour.Patrol:
+                Patrol();
                 break;
-            case Behaviour.ChasePatternMovement:
-                ChasePatternMovement(prey.position);
+            case Behaviour.ChasePatrol:
+                ChasePatrol(prey.position);
                 break;
             case Behaviour.Hide:
                 Hide(prey.position);
@@ -61,10 +59,9 @@ public class AdvancedEnemy : MonoBehaviour
         }
     }
 
-    private void ChaseLineOfSight(Vector3 targetPosition, float speed)
+    private void Chase(Vector3 targetPosition, float speed)
     {
         var direction = (targetPosition - transform.position).normalized * speed;
-        Debug.DrawLine(transform.position, transform.position + direction, Color.red);
         enemyRigidbody.velocity = new Vector3(
             direction.x,
             enemyRigidbody.velocity.y,
@@ -77,30 +74,29 @@ public class AdvancedEnemy : MonoBehaviour
         var distance = Vector3.Distance(targetPosition, transform.position);
         var timeToClose = distance / velocityRelative.magnitude;
         var predictedInterceptionPoint = targetPosition + timeToClose * targetVelocity;
-        Debug.DrawLine(targetPosition, predictedInterceptionPoint, Color.blue);
         
-        ChaseLineOfSight(predictedInterceptionPoint, chaseSpeed);
+        Chase(predictedInterceptionPoint, chaseSpeed);
     }
 
-    private void PatternMovement()
+    private void Patrol()
     {
         var targetPos = wayPoints[currentWayPoint].position;
-        ChaseLineOfSight(targetPos, normalSpeed);
+        Chase(targetPos, normalSpeed);
         if (Vector3.Distance(transform.position, targetPos) < distanceThreshold)
         {
             currentWayPoint = (currentWayPoint + 1) % wayPoints.Length;
         }
     }
 
-    private void ChasePatternMovement(Vector3 targetPosition)
+    private void ChasePatrol(Vector3 targetPosition)
     {
         if (Vector3.Distance(targetPosition, transform.position) < chaseEvadeDistance)
         {
-            ChaseLineOfSight(targetPosition, chaseSpeed);
+            Chase(targetPosition, chaseSpeed);
         }
         else
         {
-            PatternMovement();
+            Patrol();
         }
     }
 
@@ -108,11 +104,11 @@ public class AdvancedEnemy : MonoBehaviour
     {
         if (PlayerVisible(targetPosition))
         {
-            ChaseLineOfSight(targetPosition, chaseSpeed);
+            Chase(targetPosition, chaseSpeed);
         }
         else
         {
-            PatternMovement();
+            Patrol();
         }
     }
 
@@ -120,6 +116,18 @@ public class AdvancedEnemy : MonoBehaviour
     {
         var directionToTarget = (targetPosition - transform.position).normalized;
         Physics.Raycast(transform.position, directionToTarget, out var hit);
-        return hit.collider.gameObject.CompareTag("Player");
+        return hit.collider.CompareTag("Player");
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (behaviour == Behaviour.Patrol || behaviour == Behaviour.ChasePatrol)
+        {
+            for (int i = 0; i < wayPoints.Length - 1; i++)
+            {
+                var to = (i + 1) % wayPoints.Length;
+                Gizmos.DrawLine(wayPoints[i].position, wayPoints[to].position);
+            }
+        }
     }
 }
