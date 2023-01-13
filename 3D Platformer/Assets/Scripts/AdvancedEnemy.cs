@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class AdvancedEnemy : MonoBehaviour
 {
@@ -9,30 +10,29 @@ public class AdvancedEnemy : MonoBehaviour
         Intercept,
         Patrol,
         ChasePatrol,
-        Hide
+        Hide,
+        NavMeshPatrol
     }
-    
-    [SerializeField]
-    private float chaseSpeed = 6;
-    [SerializeField]
-    private float normalSpeed = 3;
-    [SerializeField]
-    private Rigidbody prey;
-    [SerializeField]
-    private Behaviour behaviour;
-    [SerializeField]
-    private Transform[] wayPoints;
-    [SerializeField]
-    private float distanceThreshold = 2;
-    [SerializeField]
-    private float chaseEvadeDistance = 10;
+
+    [SerializeField] private float chaseSpeed = 6;
+    [SerializeField] private float normalSpeed = 3;
+    [SerializeField] private Rigidbody prey;
+    [SerializeField] private Behaviour behaviour;
+    [SerializeField] private Transform[] wayPoints;
+    [SerializeField] private float distanceThreshold = 2;
+    [SerializeField] private float chaseEvadeDistance = 10;
 
     private Rigidbody enemyRigidbody;
+    private NavMeshAgent agent;
     private int currentWayPoint;
 
     private void Awake()
     {
         enemyRigidbody = GetComponent<Rigidbody>();
+
+        agent = GetComponent<NavMeshAgent>();
+        agent.autoBraking = false;
+        agent.destination = wayPoints[currentWayPoint].position;
     }
 
     private void FixedUpdate()
@@ -54,6 +54,10 @@ public class AdvancedEnemy : MonoBehaviour
             case Behaviour.Hide:
                 Hide(prey.position);
                 break;
+            case Behaviour.NavMeshPatrol:
+                if (!agent.pathPending && agent.remainingDistance < .5f)
+                    NavigateToNextPoint();
+                break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
@@ -74,7 +78,7 @@ public class AdvancedEnemy : MonoBehaviour
         var distance = Vector3.Distance(targetPosition, transform.position);
         var timeToClose = distance / velocityRelative.magnitude;
         var predictedInterceptionPoint = targetPosition + timeToClose * targetVelocity;
-        
+
         Chase(predictedInterceptionPoint, chaseSpeed);
     }
 
@@ -119,14 +123,36 @@ public class AdvancedEnemy : MonoBehaviour
         return hit.collider.CompareTag("Player");
     }
 
+    private void NavigateToNextPoint()
+    {
+        currentWayPoint = (currentWayPoint + 1) % wayPoints.Length;
+        agent.destination = wayPoints[currentWayPoint].position;
+    }
+
     private void OnDrawGizmos()
     {
-        if (behaviour == Behaviour.Patrol || behaviour == Behaviour.ChasePatrol)
+        switch (behaviour)
         {
-            for (int i = 0; i < wayPoints.Length - 1; i++)
+            case Behaviour.Patrol or Behaviour.ChasePatrol:
             {
-                var to = (i + 1) % wayPoints.Length;
-                Gizmos.DrawLine(wayPoints[i].position, wayPoints[to].position);
+                for (int i = 0; i < wayPoints.Length; i++)
+                {
+                    var to = (i + 1) % wayPoints.Length;
+                    Gizmos.DrawLine(wayPoints[i].position, wayPoints[to].position);
+                }
+
+                break;
+            }
+            case Behaviour.NavMeshPatrol:
+            {
+                if(agent == null) return;
+                
+                for (int i = 0; i < agent.path.corners.Length - 1; i++)
+                {
+                    Gizmos.DrawLine(agent.path.corners[i], agent.path.corners[i + 1]);
+                }
+
+                break;
             }
         }
     }
