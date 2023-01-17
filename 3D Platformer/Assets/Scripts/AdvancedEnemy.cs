@@ -11,7 +11,7 @@ public class AdvancedEnemy : MonoBehaviour
         Patrol,
         ChasePatrol,
         Hide,
-        NavMeshPatrol
+        PatrolNavMesh
     }
 
     [SerializeField] private float chaseSpeed = 6;
@@ -54,7 +54,7 @@ public class AdvancedEnemy : MonoBehaviour
             case Behaviour.Hide:
                 Hide(prey.position);
                 break;
-            case Behaviour.NavMeshPatrol:
+            case Behaviour.PatrolNavMesh:
                 if (!agent.pathPending && agent.remainingDistance < .5f)
                     NavigateToNextPoint();
                 break;
@@ -143,7 +143,7 @@ public class AdvancedEnemy : MonoBehaviour
 
                 break;
             }
-            case Behaviour.NavMeshPatrol:
+            case Behaviour.PatrolNavMesh:
             {
                 if(agent == null) return;
                 
